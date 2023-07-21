@@ -2,6 +2,12 @@ import User from '../models/UserModel.js';
 import Chat from '../models/ChatModel.js';
 import axios from 'axios';
 
+/**
+ * @param {*} req
+ * @param {*} res
+ * Retrieve the chat messages from the ID provided in the request body.
+ * @returns {Object} All the chat messages with the given id
+ */
 export const getChatById = async (req, res) => {
   const chatID = req.params.id;
   if (!chatID) {
@@ -15,9 +21,14 @@ export const getChatById = async (req, res) => {
   }
 };
 
+/**
+ * @param {*} req
+ * @param {*} res
+ * Runs everytie a message is posted by the user. Save the message in the database. Post the entire chat, latest message, and sources to the python backend and get the response. Save the response from the bot in the database, and return the result
+ */
 export const postMessage = async (req, res) => {
-  const { uid, cid, message } = req.body;
-  console.log(uid, cid, message);
+  const { uid, cid, message, sources } = req.body;
+  console.log(uid, cid, message, sources);
   // save user msg
   try {
     let chat;
@@ -35,9 +46,10 @@ export const postMessage = async (req, res) => {
       await chat.save();
       // make req to py backend
       console.log('CHAT', chat);
+      const pybackendData = { chat, sources };
       const pyres = await axios.post(
         'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
-        chat
+        pybackendData
       );
       let botreply = '';
       let role = pyres?.data[0]?.message?.role;
@@ -71,9 +83,10 @@ export const postMessage = async (req, res) => {
       content: message,
     });
     await chat.save();
+    const pybackendData = { chat, sources };
     const pyres = await axios.post(
       'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
-      chat
+      pybackendData
     );
     let botreply = '';
     let role = pyres?.data[0]?.message?.role;
@@ -96,9 +109,6 @@ export const postMessage = async (req, res) => {
       role,
       chat,
     });
-    // send message to python backend and wait for response
-    // update chat to add the python backend response
-    // send the reponse to the frontend (include chat id)
   } catch (error) {
     console.log(error);
     res.json({ success: false, responseText: 'there was an error', error });
