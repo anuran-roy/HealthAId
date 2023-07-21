@@ -8,6 +8,20 @@ import { Server } from 'socket.io';
 
 const app = express();
 const httpServer = createServer(app);
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: [
+    'Access-Control-Allow-Origin',
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization',
+    'Set-Cookie',
+  ],
+  credentials: true,
+};
 const io = new Server(httpServer, corsOptions);
 io.on('connection', (socket) => {
   console.log(socket);
@@ -25,20 +39,7 @@ chatSocket.on('message', (message) => {
 
 connectDB();
 
-const corsOptions = {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-  allowedHeaders: [
-    'Access-Control-Allow-Origin',
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'Authorization',
-    'Set-Cookie',
-  ],
-  credentials: true,
-};
+
 // Middlewares
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
