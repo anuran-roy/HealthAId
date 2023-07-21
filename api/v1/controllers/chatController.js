@@ -31,7 +31,7 @@ export const postMessage = async (req, res) => {
         timestamp: new Date(),
         content: message,
       };
-      chat.msgs.push({ obj });
+      chat.msgs.push(obj);
       await chat.save();
       // make req to py backend
       const pyres = await axios.post(
