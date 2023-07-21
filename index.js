@@ -23,14 +23,14 @@ const corsOptions = {
   credentials: true,
 };
 const io = new Server(httpServer, corsOptions);
-io.on('connection', (socket) => {
-  console.log(socket);
-});
+// io.on('connection', (socket) => {
+//   console.log(socket);
+// });
 
 // chat socket
 const chatSocket = io.of('/chat');
 chatSocket.on('connection', (socket) => {
-  console.log('someone connected', socket);
+  console.log('someone connected');
 });
 chatSocket.on('message', (message) => {
   console.log('message received', message);
