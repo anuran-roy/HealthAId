@@ -1,5 +1,6 @@
 import User from '../models/UserModel.js';
 import Chat from '../models/ChatModel.js';
+import axios from 'axios';
 
 export const getChatById = async (req, res) => {
   const chatID = req.params.id;
@@ -19,6 +20,7 @@ export const postMessage = async (req, res) => {
   // save user msg
   try {
     let chat = await Chat.findById(cid);
+    let user;
     if (!chat) {
       // first message of a new chat
       const obj = {
@@ -28,9 +30,16 @@ export const postMessage = async (req, res) => {
         content: message,
       };
 
-      chat = new Chat({ userID: uid });
-      newChat.msgs.push(obj);
-      await newChat.save();
+      user = await User.findById(uid);
+      chat = new Chat({ userID: uid, email: user.email });
+      chat.msgs.push(obj);
+      await chat.save();
+      const pyres = await axios.post(
+        'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
+        chat
+      );
+      console.log(pyres);
+      return res.json({ success: true, pyres });
       // send message to python backend and wait for response
       // update chat to add the python backend response
       // send the reponse to the frontend (include chat id)
@@ -42,6 +51,13 @@ export const postMessage = async (req, res) => {
       content: message,
     });
     await chat.save();
+    user = await User.findById(uid);
+    const pyres = await axios.post(
+      'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
+      chat
+    );
+    console.log(pyres);
+    return res.json({ success: true, pyres });
     // send message to python backend and wait for response
     // update chat to add the python backend response
     // send the reponse to the frontend (include chat id)
