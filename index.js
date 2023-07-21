@@ -28,14 +28,14 @@ const io = new Server(httpServer, corsOptions);
 // });
 
 // chat socket
-const chatSocket = io.of('/chat');
-chatSocket.on('connection', (socket) => {
-  console.log('someone connected');
-});
-chatSocket.on('message', (message) => {
-  console.log('message received', message);
-  chatSocket.emit('received-this', message);
-});
+// const chatSocket = io.of('/chat');
+// chatSocket.on('connection', (socket) => {
+//   console.log('someone connected');
+// });
+// chatSocket.on('message', (message) => {
+//   console.log('message received', message);
+//   chatSocket.emit('received-this', message);
+// });
 
 connectDB();
 
@@ -58,6 +58,7 @@ app.get('/', (req, res) => {
 // new user
 
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/chat', chatRouter);
 
 const PORT = process.env.PORT || 8080;
 httpServer.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
