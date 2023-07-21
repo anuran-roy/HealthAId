@@ -27,7 +27,7 @@ export const postMessage = async (req, res) => {
       chat = new Chat({ userID: uid, email: user._id });
       const obj = {
         sender: 'user',
-        role: 'user',
+        role: 'system',
         timestamp: new Date(),
         content: message,
       };
@@ -39,8 +39,27 @@ export const postMessage = async (req, res) => {
         'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
         chat
       );
-      console.log(pyres.data);
-      return res.json({ success: true, data: pyres.data });
+      let botreply = '';
+      let role = pyres?.data[0]?.message?.role;
+      for (let i = 0; i < pyres.data.length; i++) {
+        botreply.append(pyres?.data[i]?.message.content);
+      }
+      console.log(role, botreply);
+      const botobj = {
+        sender: 'bot',
+        role: 'assistant',
+        timestamp: new Date(),
+        content: botreply,
+      };
+      chat.msgs.push(botobj);
+      await chat.save();
+      return res.json({
+        success: true,
+        botreply,
+        role,
+        responseText: 'chat posted',
+        chat,
+      });
     }
     chat = await Chat.findById(cid);
     chat.msgs.push({
@@ -54,8 +73,27 @@ export const postMessage = async (req, res) => {
       'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
       chat
     );
-    console.log(pyres.data);
-    res.json({ success: true, data: pyres.data });
+    let botreply = '';
+    let role = pyres?.data[0]?.message?.role;
+    for (let i = 0; i < pyres.data.length; i++) {
+      botreply.append(pyres?.data[i]?.message?.content);
+    }
+    console.log(role, botreply);
+    const botobj = {
+      sender: 'bot',
+      role: role,
+      timestamp: new Date(),
+      content: botreply,
+    };
+    chat.msgs.push(botobj);
+    await chat.save();
+    res.json({
+      success: true,
+      responseText: 'chat posted',
+      botreply,
+      role,
+      chat,
+    });
     // send message to python backend and wait for response
     // update chat to add the python backend response
     // send the reponse to the frontend (include chat id)
