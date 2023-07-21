@@ -54,8 +54,8 @@ export const postMessage = async (req, res) => {
       'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
       chat
     );
-    console.log(pyres);
-    res.json({ success: true, pyres });
+    console.log(pyres.data);
+    res.json({ success: true, data: pyres.data });
     // send message to python backend and wait for response
     // update chat to add the python backend response
     // send the reponse to the frontend (include chat id)
