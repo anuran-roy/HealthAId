@@ -3,8 +3,25 @@ import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import userRouter from './api/v1/routes/userRoutes.js';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer);
+io.on('connection', (socket) => {
+  console.log(socket);
+});
+
+// chat socket
+const chatSocket = io.of('/chat');
+chatSocket.on('connection', (socket) => {
+  console.log('someone connected', socket);
+});
+chatSocket.on('message', (message) => {
+  console.log('message received', message);
+  chatSocket.emit("received-this", message);
+});
 
 connectDB();
 
@@ -42,4 +59,5 @@ app.get('/', (req, res) => {
 app.use('/api/v1/user', userRouter);
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
+httpServer.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
+// app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
