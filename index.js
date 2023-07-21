@@ -8,7 +8,7 @@ import { Server } from 'socket.io';
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, corsOptions);
 io.on('connection', (socket) => {
   console.log(socket);
 });
@@ -20,7 +20,7 @@ chatSocket.on('connection', (socket) => {
 });
 chatSocket.on('message', (message) => {
   console.log('message received', message);
-  chatSocket.emit("received-this", message);
+  chatSocket.emit('received-this', message);
 });
 
 connectDB();
