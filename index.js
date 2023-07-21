@@ -2,14 +2,13 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db';
-const { originUrl } = require('./config/index');
 
 const app = express();
 
 connectDB();
 
 const corsOptions = {
-  origin: originUrl,
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: [
     'Access-Control-Allow-Origin',
@@ -28,12 +27,16 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
+
 app.get('/', (req, res) => {
   res.json({
     success: true,
     message: 'Landing page',
   });
 });
+
+app.use('/api/v1/user', userRouter);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));

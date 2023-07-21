@@ -67,10 +67,13 @@ const loginUser = async (req, res) => {
   try {
     let user = await User.findOne({ email: email });
     if (user) {
+      // create token
+      const token = createAccessToken({ uid: user._id, email: user.email });
       return res.json({
         success: true,
         responseText: 'user already exists, logging in',
         data: user,
+        token,
       });
     }
     user = createUser(req);
