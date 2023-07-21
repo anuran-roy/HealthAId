@@ -53,6 +53,8 @@ export const postMessage = async (req, res) => {
       };
       chat.msgs.push(botobj);
       await chat.save();
+      user.chats.push(chat);
+      await user.save();
       return res.json({
         success: true,
         botreply,
