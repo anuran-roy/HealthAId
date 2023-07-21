@@ -5,6 +5,7 @@ import connectDB from './config/db.js';
 import userRouter from './api/v1/routes/userRoutes.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import chatRouter from './api/v1/routes/chatRoutes.js';
 
 const app = express();
 const httpServer = createServer(app);
