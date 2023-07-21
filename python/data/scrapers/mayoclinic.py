@@ -73,7 +73,8 @@ async def get_all_links(loop=asyncio.new_event_loop()) -> list[str]:
     )
 
     total_links = await send_requests_parallel(index_links, loop=loop)
-    # print("Type of content in links = ", type(total_links[0][0]))
+    # print(total_links)
+    print("Type of content in links = ", type(total_links[0][0]))
     sanitized_links_by_letter = [
         list(filter(lambda x: x.find("diseases-conditions") != -1, total_links_segment))
         for total_links_segment in total_links
@@ -119,7 +120,7 @@ def contents_till_next_section(section: Tag) -> list[str]:
     section_name = section.contents[0] if len(section.contents) > 0 else ""
     sections_data = "\n\n".join([x for x in sections_content if x not in [""]])
 
-    return {section_name: sections_data}
+    return {section_name.replace(" ", "_"): sections_data}
 
 
 def get_title_from_url(url: str) -> str:
@@ -161,7 +162,7 @@ def get_data_from_url(url: str):
         "Overview",
         "Symptoms",
         "Causes",
-        "Risk factors",
+        "Risk_factors",
         "Related",
         "Complications",
         "Prevention",
@@ -169,9 +170,9 @@ def get_data_from_url(url: str):
     ]
 
     final_data = {}
-    for field in total_sections_data.keys():
-        if field in wanted_sections:
-            final_data[field] = total_sections_data[field]
+    for field in wanted_sections:# total_sections_data.keys():
+        # if field in wanted_sections:
+        final_data[field] = total_sections_data.get(field)
 
     final_data = final_data | {"Name": condition_name}  # For listing
     try:
@@ -235,6 +236,30 @@ def get_data(offset: int = 0, limit: int = -1) -> list[str]:
 
 if __name__ == "__main__":
     # file = open("a.json", "w") # For indexing by disease name
-    file = open("b.json", "w")  # For listing
-    file.write(json.dumps(get_data(offset=10, limit=20), indent=4))
-    file.close()
+    from db.postgres.db import db
+    from db.postgres.models.models import MayoClinicEntry
+    from time import sleep
+    LIMIT = 20
+    INDEX_COUNT = 1146
+
+    def write_to_db(json_data: list[dict]):
+        entry = MayoClinicEntry.insert_many(json_data).execute()
+
+    # file = open("b.json", "w")  # For listing
+    # file.write(json.dumps(get_data(offset=10, limit=LIMIT), indent=4))
+    # file.close()
+
+    for offset in range(0, INDEX_COUNT, LIMIT):
+        write_to_db(list(filter(lambda x: x != {
+            "Overview": None,
+            "Symptoms": None,
+            "Causes": None,
+            "Risk_factors": None,
+            "Related": None,
+            "Complications": None,
+            "Prevention": None,
+            "Types": None,
+            "Name": None
+        }, get_data(offset=offset, limit=LIMIT))))
+        sleep(5.0)
+        asyncio.sleep(5.0)
