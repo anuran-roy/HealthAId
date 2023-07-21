@@ -46,43 +46,17 @@ export const postMessage = async (req, res) => {
       await chat.save();
       // make req to py backend
       console.log('CHAT', chat);
-      const pybackendData = { chat, sources };
-      const pyres = await axios.post(
-        'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
-        pybackendData
-      );
-      let botreply = '';
-      let role = pyres?.data[0]?.message?.role;
-      for (let i = 0; i < pyres.data.length; i++) {
-        botreply += pyres?.data[i]?.message.content;
-      }
-      console.log(role, botreply);
-      const botobj = {
-        sender: 'bot',
-        role: 'assistant',
+    } else {
+      chat = await Chat.findById(cid);
+      chat.msgs.push({
+        sender: 'user',
+        role: 'user',
         timestamp: new Date(),
-        content: botreply,
-      };
-      chat.msgs.push(botobj);
-      await chat.save();
-      user.chats.push(chat);
-      await user.save();
-      return res.json({
-        success: true,
-        botreply,
-        role,
-        responseText: 'chat posted',
-        chat,
+        content: message,
       });
+      await chat.save();
     }
-    chat = await Chat.findById(cid);
-    chat.msgs.push({
-      sender: 'user',
-      role: 'user',
-      timestamp: new Date(),
-      content: message,
-    });
-    await chat.save();
+
     const pybackendData = { chat, sources };
     const pyres = await axios.post(
       'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
@@ -93,15 +67,19 @@ export const postMessage = async (req, res) => {
     for (let i = 0; i < pyres.data.length; i++) {
       botreply += pyres?.data[i]?.message.content;
     }
-    // console.log(role, botreply);
+    console.log(role, botreply);
     const botobj = {
       sender: 'bot',
-      role: role,
+      role: 'assistant',
       timestamp: new Date(),
       content: botreply,
     };
     chat.msgs.push(botobj);
     await chat.save();
+    if (!cid) {
+      user.chats.push(chat);
+      await user.save();
+    }
     res.json({
       success: true,
       responseText: 'chat posted',
