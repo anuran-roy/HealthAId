@@ -33,4 +33,4 @@ const chatSchema = new Schema(
 
 const Chat = model('chat', chatSchema);
 
-export default User;
+export default Chat;
