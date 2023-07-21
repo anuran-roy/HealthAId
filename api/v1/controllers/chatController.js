@@ -34,12 +34,13 @@ export const postMessage = async (req, res) => {
       chat.msgs.push(obj);
       await chat.save();
       // make req to py backend
+      console.log('CHAT', chat);
       const pyres = await axios.post(
         'https://hackrx-llms-api.anuranroy1.repl.co/get_prompt',
         chat
       );
-      console.log(pyres);
-      return res.json({ success: true, pyres });
+      console.log(pyres.data);
+      return res.json({ success: true, data: pyres.data });
     }
     chat = await Chat.findById(cid);
     chat.msgs.push({
