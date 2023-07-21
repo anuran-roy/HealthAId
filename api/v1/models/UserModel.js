@@ -35,6 +35,11 @@ const userSchema = new Schema(
       ref: 'chat',
     },
     sources: [String],
+    role: {
+      type: String,
+      enum: ['admin', 'user'],
+      default: user,
+    },
   },
   { timestamps: true }
 );

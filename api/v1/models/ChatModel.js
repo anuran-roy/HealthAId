@@ -22,7 +22,7 @@ const chatSchema = new Schema(
         },
         role: {
           type: String,
-          enum: ['system', 'user', 'assisstant'],
+          enum: ['system', 'user', 'assistant'],
           default: 'user',
         },
       },
