@@ -22,7 +22,7 @@ const createUser = async (req, res) => {
   try {
     // calculate bmi - weight (kg) / height (m) squared
     const BMI = (weight / Math.pow(height, 2)).toFixed(2);
-    const user = new User(
+    const user = new User({
       email,
       name,
       avatarURL,
@@ -32,8 +32,8 @@ const createUser = async (req, res) => {
       height,
       BMI,
       bloodGrp,
-      sources
-    );
+      sources,
+    });
     await user.save();
     // generate token - payload -> user id and email
     const token = createAccessToken({ uid: user._id, email: user.email });
