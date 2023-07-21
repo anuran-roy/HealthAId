@@ -2,12 +2,11 @@ import { createAccessToken } from '../middleware/auth';
 import User from '../models/UserModel';
 
 /**
- *
  * @param {*} req
  * Creates a new user
  * @returns {Object} user
  */
-const createUser = async (req) => {
+const createUser = async (req, res) => {
   // extract data from req body
   const {
     email,
@@ -38,13 +37,18 @@ const createUser = async (req) => {
     await user.save();
     // generate token - payload -> user id and email
     const token = createAccessToken({ uid: user._id, email: user.email });
-    console.log(token);
-    // return user
-    return user;
+    console.log('new user token', token);
+    // return response
+    res.json({
+      success: true,
+      responseText: 'user created',
+      data: user,
+      token,
+    });
   } catch (error) {
     console.log(error);
-    return res.json({
-      success: false,
+    res.json({
+      success: true,
       responseText: 'There was an error',
       msg: error.msg,
       error,
@@ -53,7 +57,6 @@ const createUser = async (req) => {
 };
 
 /**
- *
  * @param {*} req
  * @param {*} res
  * Checks that if user already exists
@@ -76,12 +79,7 @@ const loginUser = async (req, res) => {
         token,
       });
     }
-    user = createUser(req);
-    res.json({
-      success: true,
-      responseText: 'user created',
-      data: user,
-    });
+    res.json({ success: false, responseText: 'user does not exist' });
   } catch (error) {
     console.log(error);
     return res.json({

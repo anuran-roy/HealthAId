@@ -36,6 +36,8 @@ app.get('/', (req, res) => {
   });
 });
 
+// new user
+
 app.use('/api/v1/user', userRouter);
 
 const PORT = process.env.PORT || 8080;
