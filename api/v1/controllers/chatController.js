@@ -78,7 +78,7 @@ export const postMessage = async (req, res) => {
     for (let i = 0; i < pyres.data.length; i++) {
       botreply.concat(pyres?.data[i]?.message?.content);
     }
-    console.log(role, botreply);
+    // console.log(role, botreply);
     const botobj = {
       sender: 'bot',
       role: role,
