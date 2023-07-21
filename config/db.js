@@ -1,4 +1,5 @@
-import { connect, connection } from 'mongoose';
+import mongoose from 'mongoose';
+const { connect, connection } = mongoose;
 const dbURL = process.env.MONGODB_URL;
 
 const connectDB = () => {

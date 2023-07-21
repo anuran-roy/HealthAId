@@ -1,5 +1,5 @@
-import { createAccessToken } from '../middleware/auth';
-import User from '../models/UserModel';
+import { createAccessToken } from '../middleware/auth.js';
+import User from '../models/UserModel.js';
 
 /**
  * @param {*} req
@@ -91,4 +91,4 @@ const loginUser = async (req, res) => {
   }
 };
 
-export default { createUser, loginUser };
+export { createUser, loginUser };
