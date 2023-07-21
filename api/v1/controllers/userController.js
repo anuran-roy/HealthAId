@@ -1,6 +1,12 @@
 import { createAccessToken } from '../middleware/auth';
 import User from '../models/UserModel';
 
+/**
+ *
+ * @param {*} req
+ * Creates a new user
+ * @returns {Object} user
+ */
 const createUser = async (req) => {
   // extract data from req body
   const {
@@ -46,6 +52,15 @@ const createUser = async (req) => {
   }
 };
 
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * Checks that if user already exists
+ * If user exists - login the user
+ * Else - new user is created
+ * @returns {Object} Response after user is created or logged in
+ */
 const loginUser = async (req, res) => {
   // get data from req body
   const { email } = req.body;
