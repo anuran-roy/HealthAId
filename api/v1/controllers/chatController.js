@@ -59,6 +59,7 @@ export const postMessage = async (req, res) => {
     // update chat to add the python backend response
     // send the reponse to the frontend (include chat id)
   } catch (error) {
+    console.log(error);
     res.json({ success: false, responseText: 'there was an error', error });
   }
 };
