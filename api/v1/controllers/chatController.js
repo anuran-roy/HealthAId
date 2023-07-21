@@ -42,7 +42,7 @@ export const postMessage = async (req, res) => {
       let botreply = '';
       let role = pyres?.data[0]?.message?.role;
       for (let i = 0; i < pyres.data.length; i++) {
-        botreply.concat(pyres?.data[i]?.message.content);
+        botreply += pyres?.data[i]?.message.content;
       }
       console.log(role, botreply);
       const botobj = {
@@ -78,7 +78,7 @@ export const postMessage = async (req, res) => {
     let botreply = '';
     let role = pyres?.data[0]?.message?.role;
     for (let i = 0; i < pyres.data.length; i++) {
-      botreply.concat(pyres?.data[i]?.message?.content);
+      botreply += pyres?.data[i]?.message.content;
     }
     // console.log(role, botreply);
     const botobj = {
