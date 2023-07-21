@@ -17,6 +17,7 @@ export const getChatById = async (req, res) => {
 
 export const postMessage = async (req, res) => {
   const { uid, cid, message } = req.body;
+  console.log(uid, cid, message);
   // save user msg
   try {
     let chat = await Chat.findById(cid);
