@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const chatSchema = new Schema(
   {
     userID: {
-      type: [Schema.Types.ObjectId],
+      type: Schema.Types.ObjectId,
       ref: 'user',
     },
     email: String,
