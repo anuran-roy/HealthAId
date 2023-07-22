@@ -5,9 +5,9 @@ from data.scrapers import mayoclinic
 scraper_app = FastAPI(title="", description="")
 
 
-@scraper_app.get("/mayoclinic")
-def getMayoClinicData(query: str) -> dict[str, str]:
-    mayoclinic.get_data()
+# @scraper_app.get("/mayoclinic")
+# def getMayoClinicData(query: str) -> dict[str, str]:
+#     mayoclinic.get_data()
 
 
 if __name__ == "__main__":
