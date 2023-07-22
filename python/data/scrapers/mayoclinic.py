@@ -170,7 +170,7 @@ def get_data_from_url(url: str):
     ]
 
     final_data = {}
-    for field in wanted_sections:# total_sections_data.keys():
+    for field in wanted_sections:  # total_sections_data.keys():
         # if field in wanted_sections:
         final_data[field] = total_sections_data.get(field)
 
@@ -239,6 +239,7 @@ if __name__ == "__main__":
     from db.postgres.db import db
     from db.postgres.models.models import MayoClinicEntry
     from time import sleep
+
     LIMIT = 20
     INDEX_COUNT = 1146
 
@@ -250,16 +251,24 @@ if __name__ == "__main__":
     # file.close()
 
     for offset in range(0, INDEX_COUNT, LIMIT):
-        write_to_db(list(filter(lambda x: x != {
-            "Overview": None,
-            "Symptoms": None,
-            "Causes": None,
-            "Risk_factors": None,
-            "Related": None,
-            "Complications": None,
-            "Prevention": None,
-            "Types": None,
-            "Name": None
-        }, get_data(offset=offset, limit=LIMIT))))
+        write_to_db(
+            list(
+                filter(
+                    lambda x: x
+                    != {
+                        "Overview": None,
+                        "Symptoms": None,
+                        "Causes": None,
+                        "Risk_factors": None,
+                        "Related": None,
+                        "Complications": None,
+                        "Prevention": None,
+                        "Types": None,
+                        "Name": None,
+                    },
+                    get_data(offset=offset, limit=LIMIT),
+                )
+            )
+        )
         sleep(5.0)
         asyncio.sleep(5.0)
