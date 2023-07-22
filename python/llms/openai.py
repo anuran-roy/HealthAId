@@ -2,6 +2,7 @@ from typing import Any, Dict, List
 import openai
 import os
 from dotenv import load_dotenv
+
 # from logs.logger import log
 
 load_dotenv()
@@ -9,12 +10,13 @@ load_dotenv()
 load_dotenv()
 
 # os.getenv("OPENAI_API_KEY")
-openai.api_key = "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" # "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"
+openai.api_key = "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"  # "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"
+
 
 def get_single_message(
     messages: List[Dict[str, Any]],
     model: str = "gpt-3.5-turbo",
-    max_tokens: int = 50,
+    max_tokens: int = 500,
     temperature: float = 0.0,
 ):
     """
