@@ -1,6 +1,7 @@
 from peewee import Model, CharField, TextField
 from db.postgres.db import db
 
+
 class MayoClinicEntry(Model):
     Name = TextField(null=True, help_text="Condition Name")
     Overview = TextField(null=True, help_text="Condition Overview")
@@ -14,5 +15,6 @@ class MayoClinicEntry(Model):
 
     class Meta:
         database = db
+
 
 db.create_tables([MayoClinicEntry])
