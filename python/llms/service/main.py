@@ -17,10 +17,9 @@ def generate_prompt(data: str, query: str):
     data = "" if data is None else data
     query = "" if data is None else query
     prompt = """
-You are supposed to be a medical question-answering bot. You are NOT supposed to answer anything other than the user's question, provided under the questions section.
+You are supposed to be a medical question-answering bot. DO NOT answer anything other than medical or health-related questions, provided under the questions section. If the user asks for something else, please tell: "I am just a medical bot, I don't know."
 
 You MUST answer from ONLY inside the Data Section.
-
 You should follow the following examples of a good conversation. U means the User, and A means the Assistant. The conversation examples are:
 
 ```
@@ -72,6 +71,6 @@ def get_prompt(message_ob: MessageSchema):
     extracted_messages: List[Dict[str, Any]] = list(map(lambda msg: {"role": msg.get(
         "role", "user"), "content": msg["content"]}, received_messages))
     print(extracted_messages)
-    result = get_single_message(messages=augment_data(extracted_messages, sources=message_ob.sources))
+    result = get_single_message(messages=augment_data(extracted_messages, sources=message_ob.sources), model="gpt-3.5-turbo-16k")
     print(result)
     return result

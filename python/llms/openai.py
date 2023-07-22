@@ -16,7 +16,7 @@ openai.api_key = "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"  # "sk-0P
 def get_single_message(
     messages: List[Dict[str, Any]],
     model: str = "gpt-3.5-turbo",
-    max_tokens: int = 500,
+    max_tokens: int = 150,
     temperature: float = 0.0,
 ):
     """

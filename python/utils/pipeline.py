@@ -2,7 +2,7 @@ from utils.elasticsearch import total_search, vector_search, send_to_elasticsear
 from utils.embeddings import generate_chunk_embeddings
 from db.elasticsearch.db import client
 
-def get_data(query: str, source: str = "mayoclinic", threshold: float = 0.00313, limit: int=10) -> str:
+def get_data(query: str, source: str = "mayoclinic", threshold: float = 0.002, limit: int=10) -> str:
     query_embedding = generate_chunk_embeddings(query)
 
     required_fields = [

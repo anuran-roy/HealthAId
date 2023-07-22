@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup, Tag
+# from utils.elasticsearch import send_to_elasticsearch
+# from db.elasticsearch import db
 
 def get_soup_items_from_search(search_query: str):
     soup = BeautifulSoup(requests.get(f"https://www.drugs.com/search.php?searchterm={search_query}").content)
@@ -61,6 +63,8 @@ def get_data(search: str):
 
     extracted_info = extract_info(link_data)
     print("Extracted info from drugs.com: ", extracted_info)
+
+    # send_to_elasticsearch(db.client, [extracted_info], index="drugs_com_index")
     return extracted_info
 
 if __name__ == "__main__":
