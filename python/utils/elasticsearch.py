@@ -2,12 +2,7 @@ from typing import Any
 from elasticsearch import helpers
 
 def send_to_elasticsearch(client, documents: dict[str, Any], index: str) -> Any:
-    response = helpers.bulk(
-        client,
-        documents,
-        index=index
-    )
-    return response
+    return helpers.bulk(client, documents, index=index)
 
 
 def vector_search(client, content_vector: list[float], index: str, field: str, limit: int=10) -> list[dict]:
@@ -19,13 +14,13 @@ def vector_search(client, content_vector: list[float], index: str, field: str, l
             "query_vector": content_vector
         }
     }
-    
-    response = client.knn_search(
+
+    return client.knn_search(
         body=script_query,
         index=index,
-    )["hits"]["hits"]
-    
-    return response
+    )[
+        "hits"
+    ]["hits"]
 
 # new_docs[0]["Symptoms_vector"]
 # vector_search(client, content_vector=new_docs[0]["Symptoms_vector"], index="mayoclinic_index", field="Symptoms_vector")
