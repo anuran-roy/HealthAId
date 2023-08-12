@@ -1,6 +1,17 @@
 node_modules
-*.env
+**/*.env
 
 # Python
 **/venv
 **/__pycache__
+**/*.ipynb
+
+# IDE files
+
+**/.idea
+**/.vscode
+**/.vs
+**/.DS_Store
+**/*.iml
+**/*.ipynb_checkpoints
+**/.pytest_cache
