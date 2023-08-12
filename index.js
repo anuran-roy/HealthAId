@@ -5,26 +5,10 @@ import connectDB from './config/db.js';
 import userRouter from './api/v1/routes/userRoutes.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import chatRouter from './api/v1/routes/chatRoutes.js';
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
-io.on('connection', (socket) => {
-  console.log(socket);
-});
-
-// chat socket
-const chatSocket = io.of('/chat');
-chatSocket.on('connection', (socket) => {
-  console.log('someone connected', socket);
-});
-chatSocket.on('message', (message) => {
-  console.log('message received', message);
-  chatSocket.emit("received-this", message);
-});
-
-connectDB();
-
 const corsOptions = {
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
@@ -39,6 +23,24 @@ const corsOptions = {
   ],
   credentials: true,
 };
+const io = new Server(httpServer, corsOptions);
+// io.on('connection', (socket) => {
+//   console.log(socket);
+// });
+
+// chat socket
+// const chatSocket = io.of('/chat');
+// chatSocket.on('connection', (socket) => {
+//   console.log('someone connected');
+// });
+// chatSocket.on('message', (message) => {
+//   console.log('message received', message);
+//   chatSocket.emit('received-this', message);
+// });
+
+connectDB();
+
+
 // Middlewares
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
@@ -57,6 +59,7 @@ app.get('/', (req, res) => {
 // new user
 
 app.use('/api/v1/user', userRouter);
+app.use('/api/v1/chat', chatRouter);
 
 const PORT = process.env.PORT || 8080;
 httpServer.listen(PORT, () => console.log(`Server is listening on ${PORT}`));

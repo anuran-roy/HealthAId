@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 const chatSchema = new Schema(
   {
     userID: {
-      type: [Schema.Types.ObjectId],
+      type: Schema.Types.ObjectId,
       ref: 'user',
     },
     email: String,
@@ -13,7 +13,6 @@ const chatSchema = new Schema(
         content: {
           type: String,
           trim: true,
-          required: true,
         },
         timestamp: Date,
         sender: {
@@ -33,4 +32,4 @@ const chatSchema = new Schema(
 
 const Chat = model('chat', chatSchema);
 
-export default User;
+export default Chat;
