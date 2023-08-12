@@ -47,7 +47,7 @@ Now given the example, you have to answer the user's question. The required Data
     return prompt.format(data=data, query=query)
 def augment_data(extracted_messages: List[Dict], sources: List[str]):
     latest_message = extracted_messages[-1]["content"]
-    total_len = sum([len(x["content"]) for x in extracted_messages])
+    total_len = sum(len(x["content"]) for x in extracted_messages)
     data = "\n".join([get_data(latest_message, source) for source in sources if source not in ["drugs_com"]])
 
     print("Would enter conditional block")
@@ -59,7 +59,7 @@ def augment_data(extracted_messages: List[Dict], sources: List[str]):
 
     print(data[:300])
     final_prompt = generate_prompt(data=data, query=latest_message)
-    
+
     extracted_messages[-1]["content"] = final_prompt
 
     return extracted_messages
@@ -72,7 +72,4 @@ def get_prompt(message_ob: MessageSchema):
         "role", "user"), "content": msg["content"]}, received_messages))
     print(extracted_messages)
     final_messages = augment_data(extracted_messages, sources=message_ob.sources)
-    result = get_single_message(messages=final_messages, model="gpt-3.5-turbo-16k")
-    # print(result)
-    # return final_messages
-    return result
+    return get_single_message(messages=final_messages, model="gpt-3.5-turbo-16k")
