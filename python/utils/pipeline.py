@@ -26,10 +26,11 @@ def get_data(query: str, source: str = "mayoclinic", threshold: float = 0.002, l
 
     joined_res = []
     for relevant_result in relevant_results:
-        joined_data = ""
-        for key, value in relevant_result.items():
-            if key in required_fields:
-                joined_data += f"\n```{key}\n{value}\n```\n"
+        joined_data = "".join(
+            f"\n```{key}\n{value}\n```\n"
+            for key, value in relevant_result.items()
+            if key in required_fields
+        )
         joined_res.append(joined_data)
 
     final_str = "\n\n".join(joined_res).replace("\nNULL\n```", "\n```")

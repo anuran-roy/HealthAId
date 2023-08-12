@@ -17,11 +17,7 @@ def send_request(letter: str) -> list:
     link_elements_list: list[Tag] = soup_a.find_all(
         "a", {"class": "cmp-result-name__link"}
     )
-    links_list: list[str] = []
-
-    for ele in link_elements_list:
-        links_list.append(ele.attrs.get("href"))
-
+    links_list: list[str] = [ele.attrs.get("href") for ele in link_elements_list]
     return links_list
 
 
@@ -36,11 +32,7 @@ async def send_async_request(
         link_elements_list: list[Tag] = soup_a.find_all(
             "a", {"class": "cmp-result-name__link"}
         )
-        links_list: list = []
-
-        for ele in link_elements_list:
-            links_list.append(ele.attrs.get("href"))
-
+        links_list: list = [ele.attrs.get("href") for ele in link_elements_list]
         # print(f"Number of Links scraped for url {url} = ", len(links_list))
         return links_list
 
@@ -169,12 +161,9 @@ def get_data_from_url(url: str):
         "Types",
     ]
 
-    final_data = {}
-    for field in wanted_sections:  # total_sections_data.keys():
-        # if field in wanted_sections:
-        final_data[field] = total_sections_data.get(field)
-
-    final_data = final_data | {"Name": condition_name}  # For listing
+    final_data = {
+        field: total_sections_data.get(field) for field in wanted_sections
+    } | {"Name": condition_name}
     try:
         del final_data[
             condition_name
@@ -194,11 +183,9 @@ async def fetch_content_async(
     #     contents = await asyncio.gather(*[session.get(url) for url in url_list])
 
     contents = list(map(requests.get, url_list))
-    for content in contents:
-        # text: bytes = await content.read()
-        # soup_entries.append(BeautifulSoup(text.decode("utf-8"), features="lxml"))
-        soup_entries.append(BeautifulSoup(content.content, features="lxml"))
-
+    soup_entries.extend(
+        BeautifulSoup(content.content, features="lxml") for content in contents
+    )
     return [
         "\n\n====\n\n".join(
             list(
@@ -221,16 +208,10 @@ async def fetch_content_async(
 def get_data(offset: int = 0, limit: int = -1) -> list[str]:
     loop = asyncio.new_event_loop()
     links_all = sorted(loop.run_until_complete(get_all_links(loop)))
-    # contents: dict = {} # For indexing by disease name
-    contents: list[dict] = []
-
     links_filtered = links_all if limit == -1 else links_all[offset : limit + offset]
 
     print("Number of filtered links = ", len(links_filtered))
-    for link in links_filtered:
-        # print("Getting data from = ", link)
-        # contents = contents | get_data_from_url(link) # For indexing by disease name
-        contents.append(get_data_from_url(link))
+    contents: list[dict] = [get_data_from_url(link) for link in links_filtered]
     return contents
 
 
