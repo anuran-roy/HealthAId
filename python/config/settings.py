@@ -3,12 +3,12 @@
 
 # from confluent_kafka import Producer, Consumer
 # from confluent_kafka.admin import AdminClient, NewTopic, NewPartitions
-# from rich import print as rich_print
-# from pathlib import Path
+from rich import print as rich_print
+from pathlib import Path
 
 # # from pykafka import KafkaClient
 
-# BASE_DIR = Path(".").parent.parent.resolve(strict=False)
+BASE_DIR = Path(".").parent.parent.resolve(strict=False)
 
 
 # def read_ccloud_config(config_file) -> Dict[str, Any]:

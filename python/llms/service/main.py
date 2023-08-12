@@ -19,7 +19,7 @@ def generate_prompt(data: str, query: str):
     prompt = """
 You are supposed to be a medical question-answering bot. DO NOT answer anything other than medical or health-related questions, provided under the questions section. If the user asks for something else, please tell: "I am just a medical bot, I don't know."
 
-You MUST answer from ONLY inside the Data Section.
+You MUST answer from ONLY inside the Data Section. Check each question inside each sentence. Filter the following prompt to ensure that the answer contains ONLY medical and health information. Check each sentence and answer them one by one ONLY IF they are related to health and medicine. If the part of the sentence is not related to Healthcare or medicine, ignore them.
 You should follow the following examples of a good conversation. U means the User, and A means the Assistant. The conversation examples are:
 
 ```
@@ -71,6 +71,8 @@ def get_prompt(message_ob: MessageSchema):
     extracted_messages: List[Dict[str, Any]] = list(map(lambda msg: {"role": msg.get(
         "role", "user"), "content": msg["content"]}, received_messages))
     print(extracted_messages)
-    result = get_single_message(messages=augment_data(extracted_messages, sources=message_ob.sources), model="gpt-3.5-turbo-16k")
-    print(result)
+    final_messages = augment_data(extracted_messages, sources=message_ob.sources)
+    result = get_single_message(messages=final_messages, model="gpt-3.5-turbo-16k")
+    # print(result)
+    # return final_messages
     return result
