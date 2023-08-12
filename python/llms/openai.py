@@ -2,15 +2,14 @@ from typing import Any, Dict, List
 import openai
 import os
 from dotenv import load_dotenv
+from python.config import settings
 
 # from logs.logger import log
 
-load_dotenv()
-
-load_dotenv()
+load_dotenv(str(settings.BASE_DIR / ".env"))
 
 # os.getenv("OPENAI_API_KEY")
-openai.api_key = "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"  # "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def get_single_message(
